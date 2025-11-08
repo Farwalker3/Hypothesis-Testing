@@ -1,10 +1,147 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-	</head>
-	<body>
-		
-	</body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprehensive Hypothesis Generator</title>
+  <style>
+    h1 {
+      text-align: center;
+      color: rgb(66, 64, 219) !important;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    label, select, button {
+      margin: 10px 0;
+      display: block;
+    }
+    #output {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 15px;
+      background-color: #f9f9f9;
+    }
+    
+  </style>
+</head>
+<body>
+  <h1>Comprehensive Hypothesis Generator</h1>
+  <p>Select a claim type and see the corresponding hypotheses.</p>
+
+  <!-- Choice between verbal or symbol input -->
+  <label for="inputType">Select Input Type:</label>
+  <select id="inputType" onchange="updateInputType()">
+    <option value="verbal">Verbal Statement</option>
+    <option value="symbol">Mathematical Symbol</option>
+  </select>
+
+  <!-- Dropdown for verbal statements -->
+  <div id="verbalInput">
+    <label for="verbalClaim">Choose a verbal claim:</label>
+    <select id="verbalClaim">
+      <option value="greater_equal">The mean is greater than or equal to k (at least k, not less than k)</option>
+      <option value="less_equal">The mean is less than or equal to k (at most k, not more than k)</option>
+      <option value="equal_to">The mean is equal to k (exactly k)</option>
+      <option value="greater_than">The mean is greater than k (above k, more than k)</option>
+      <option value="less_than">The mean is less than k (below k, fewer than k)</option>
+      <option value="not_equal">The mean is not equal to k (different from k)</option>
+    </select>
+  </div>
+
+  <!-- Dropdown for mathematical symbols with text descriptions -->
+  <div id="symbolInput" style="display: none;">
+    <label for="symbolClaim">Choose a mathematical symbol claim:</label>
+    <select id="symbolClaim">
+      <option value="greater_equal">μ ≥ k (greater than or equal to)</option>
+      <option value="less_equal">μ ≤ k (less than or equal to)</option>
+      <option value="equal_to">μ = k (equal to)</option>
+      <option value="greater_than">μ > k (greater than)</option>
+      <option value="less_than">μ < k (less than)</option>
+      <option value="not_equal">μ ≠ k (not equal to)</option>
+    </select>
+  </div>
+
+  <!-- Generate Hypothesis Button -->
+  <button onclick="generateHypothesis()">Get Hypothesis Information</button>
+
+  <!-- Output Section -->
+  <div id="output"></div>
+
+  <script>
+    function updateInputType() {
+      const inputType = document.getElementById('inputType').value;
+      document.getElementById('verbalInput').style.display = inputType === 'verbal' ? 'block' : 'none';
+      document.getElementById('symbolInput').style.display = inputType === 'symbol' ? 'block' : 'none';
+    }
+
+    function generateHypothesis() {
+      const inputType = document.getElementById('inputType').value;
+      let claim, hypothesisInfo = "";
+
+      if (inputType === 'verbal') {
+        claim = document.getElementById('verbalClaim').value;
+      } else {
+        claim = document.getElementById('symbolClaim').value;
+      }
+
+      switch (claim) {
+        case "greater_equal":
+          hypothesisInfo = `
+            <p><strong>Null Hypothesis (H₀):</strong> μ ≥ k (claim)</p>
+            <p><strong>Alternative Hypothesis (Hₐ):</strong> μ < k</p>
+            <p><strong>Type of Test:</strong> One-tailed (Left-tailed)</p>
+            <p><strong>Reason:</strong> The null assumes the mean is at least k. The alternative tests if it's less than k.</p>
+          `;
+          break;
+        case "less_equal":
+          hypothesisInfo = `
+            <p><strong>Null Hypothesis (H₀):</strong> μ ≤ k (claim)</p>
+            <p><strong>Alternative Hypothesis (Hₐ):</strong> μ > k</p>
+            <p><strong>Type of Test:</strong> One-tailed (Right-tailed)</p>
+            <p><strong>Reason:</strong> The null assumes the mean is at most k. The alternative tests if it's greater than k.</p>
+          `;
+          break;
+        case "equal_to":
+          hypothesisInfo = `
+            <p><strong>Null Hypothesis (H₀):</strong> μ = k (claim)</p>
+            <p><strong>Alternative Hypothesis (Hₐ):</strong> μ ≠ k</p>
+            <p><strong>Type of Test:</strong> Two-tailed</p>
+            <p><strong>Reason:</strong> The null tests for equality. The alternative tests for any difference.</p>
+          `;
+          break;
+        case "greater_than":
+          hypothesisInfo = `
+            <p><strong>Null Hypothesis (H₀):</strong> μ ≤ k</p>
+            <p><strong>Alternative Hypothesis (Hₐ):</strong> μ > k (claim)</p>
+            <p><strong>Type of Test:</strong> One-tailed (Right-tailed)</p>
+            <p><strong>Reason:</strong> The null assumes the mean is at most k. The alternative tests if it's greater than k.</p>
+          `;
+          break;
+        case "less_than":
+          hypothesisInfo = `
+            <p><strong>Null Hypothesis (H₀):</strong> μ ≥ k</p>
+            <p><strong>Alternative Hypothesis (Hₐ):</strong> μ < k (claim)</p>
+            <p><strong>Type of Test:</strong> One-tailed (Left-tailed)</p>
+            <p><strong>Reason:</strong> The null assumes the mean is at least k. The alternative tests if it's less than k.</p>
+          `;
+          break;
+        case "not_equal":
+          hypothesisInfo = `
+            <p><strong>Null Hypothesis (H₀):</strong> μ = k</p>
+            <p><strong>Alternative Hypothesis (Hₐ):</strong> μ ≠ k (claim)</p>
+            <p><strong>Type of Test:</strong> Two-tailed</p>
+            <p><strong>Reason:</strong> The null tests for equality. The alternative tests for any difference.</p>
+          `;
+          break;
+        default:
+          hypothesisInfo = "<p>Invalid input. Please select a valid claim.</p>";
+      }
+
+      document.getElementById('output').innerHTML = hypothesisInfo;
+    }
+  </script>
+</body>
 </html>
